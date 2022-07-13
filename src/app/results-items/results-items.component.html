@@ -1,1 +1,8 @@
-<p>results-items works!</p>
+<h1>Results</h1>
+<ng-container *ngIf="context$ | async as context">
+  <ng-container [ngSwitch]="context.state">
+    <ng-container *ngSwitchCase="'success'">SUCCESS</ng-container>
+    <ng-container *ngSwitchCase="'failure'">FAILURE</ng-container>
+    <ng-container *ngSwitchCase="'loading'">LOADING</ng-container>
+  </ng-container>
+</ng-container>

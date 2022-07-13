@@ -10,10 +10,6 @@ export class MainSearchBarComponent implements OnInit {
 
   constructor(private machineService: MachineService) { }
 
-  getState() {
-    return this.machineService.getState()
-  }
-
   ngOnInit(): void {
   }
 
