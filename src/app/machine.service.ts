@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, connect, debounceTime, filter, merge, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, connect, debounceTime, filter, merge, Observable, of, share, switchMap, tap, zip } from 'rxjs';
 
 export type MachineResults = {
   info: {
@@ -36,25 +36,19 @@ export type MachineContext = {
   providedIn: 'root'
 })
 export class MachineService {
-  context: MachineContext = {
-    state: 'idle',
-    results: [],
-    term: '',
-    error: null
-  }
+  context: Partial<MachineContext> = { }
 
   eventSubject = new BehaviorSubject<MachineEvents>({type: 'DEBOUNCE' as const, term: ''})
   contextSubject = new BehaviorSubject<Partial<typeof this.context>>({})
 
   constructor(private httpClient: HttpClient) {
-    this.eventSubject.asObservable().pipe(connect((shared$ => merge(
-      shared$.pipe(tap((val) => console.log('monitor', val))),
+    this.eventSubject.asObservable().pipe(connect(shared$ => merge(
+      // shared$.pipe(tap((val) => console.log('monitor', val))),
       shared$.pipe(
         filter((evt) => evt.type === 'TYPING'),
         tap(((evt) => {
           const typingEvent = evt as MachineTypingEvent
-          const current = this.context
-          this.contextSubject.next({...current, state: 'user-typing', term: typingEvent.term})
+          this.update({ state: 'user-typing', term: typingEvent.term })
         })),
         debounceTime(500),
         tap((evt) => {
@@ -65,26 +59,23 @@ export class MachineService {
         filter((evt) => evt.type === 'DEBOUNCE'),
         tap((evt) => {
           const loadingEvent = evt as MachineDebounceEvent
-          const current = this.context
-          this.contextSubject.next({ ...current, state: 'loading', term: loadingEvent.term })
+          this.update({ state: 'loading', term: loadingEvent.term })
         }),
         switchMap((evt) => {
           const term = (evt as MachineDebounceEvent).term
           return this.httpClient.get<MachineResults>(`https://rickandmortyapi.com/api/character/?name=${term}`).pipe(
             tap((res) => {
-              const current = this.context
-              this.contextSubject.next({...current, state: 'success', results: res.results})
+              this.update({ state: 'success', results: res.results, term})
             }),
             catchError((err: Response) => {
               console.log(err)
-              const current = this.context
-              this.contextSubject.next({...current, state: 'failure', error: err.statusText })
+              this.update({ state: 'failure', error: err.statusText, term })
               return of([])
             })
           )
         })
       ),
-    )))).subscribe()
+    ))).subscribe()
   }
 
   getState(): Observable<Partial<MachineContext>> {
@@ -93,5 +84,10 @@ export class MachineService {
 
   send(event: MachineEvents) {
     this.eventSubject.next(event)
+  }
+
+  private update(updates: Partial<MachineContext>) {
+    this.context = {...this.context, ...updates}
+    this.contextSubject.next(this.context)
   }
 }
