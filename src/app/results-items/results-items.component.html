@@ -6,7 +6,7 @@
     <ng-container *ngSwitchCase="'success'">
       <div class="results">
           <ng-container *ngFor="let character of context.results">
-            <app-card (click)="selectCharacter(character.id)" [name]="character.name" [status]="character.status" [gender]="character.gender" [species]="character.species" [image]="character.image"></app-card>
+            <app-card (click)="selectCharacter(character.id)" [isSelected]="character.id === selectedCharacter" [name]="character.name" [status]="character.status" [gender]="character.gender" [species]="character.species" [image]="character.image"></app-card>
           </ng-container>
       </div>
       <div class="footer"></div>

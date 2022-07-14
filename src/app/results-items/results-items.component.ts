@@ -18,6 +18,10 @@ export class ResultsItemsComponent implements OnInit {
   }
 
   selectCharacter(id: number) {
-    this.selectedCharacter = id
+    if (this.selectedCharacter === id) {
+      this.selectedCharacter = null
+    } else {
+      this.selectedCharacter = id
+    }
   }
 }

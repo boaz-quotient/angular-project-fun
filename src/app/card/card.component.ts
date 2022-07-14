@@ -11,6 +11,7 @@ export class CardComponent implements OnInit {
   @Input() gender = ''
   @Input() species = ''
   @Input() image = ''
+  @Input() isSelected = false
 
   constructor() { }
 

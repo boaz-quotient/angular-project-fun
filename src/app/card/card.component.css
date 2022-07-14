@@ -20,6 +20,11 @@
   animation: card-ready 0.5s;
 }
 
+.selected {
+  border-right: 23px solid green;
+  transform: scale(1.03);
+}
+
 .container:hover {
   transform: scale(1.03);
   transition: all 0.1s;
