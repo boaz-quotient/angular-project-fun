@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { MachineContext, MachineService } from '../machine.service';
+import { Context, initContext } from '../context.service';
+import { MachineService } from '../machine.service';
 
 @Component({
   selector: 'app-results-items',
@@ -10,7 +11,7 @@ import { MachineContext, MachineService } from '../machine.service';
 export class ResultsItemsComponent implements OnInit {
 
   selectedCharacter: number | null = null
-  context$: Observable<Partial<MachineContext>> = of({})
+  context$: Observable<Context> = of(initContext)
   constructor(private machineService: MachineService) { }
 
   ngOnInit(): void {
