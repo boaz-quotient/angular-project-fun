@@ -24,4 +24,8 @@ export class ResultsItemsComponent implements OnInit {
       this.selectedCharacter = id
     }
   }
+
+  loadMore() {
+    this.machineService.loadMoreCharacters()
+  }
 }

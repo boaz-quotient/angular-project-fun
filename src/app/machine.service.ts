@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, tap } from 'rxjs';
 
 export type Character = {
   gender: string,
@@ -39,6 +39,7 @@ export class MachineService {
   context: Partial<MachineContext> = { }
 
   eventSubject = new BehaviorSubject<string>('')
+  loadMore = new Subject<string>()
   contextSubject = new BehaviorSubject<Partial<typeof this.context>>({})
 
   constructor(private httpClient: HttpClient) {
@@ -55,6 +56,16 @@ export class MachineService {
         })
       ))
     ).subscribe()
+    this.loadMore.asObservable().pipe(
+      switchMap(url => this.httpClient.get<MachineResults>(url).pipe(
+        tap(res => {
+          this.moreResults(res.results, url, res.info.next)
+        }),
+        catchError((err) => {
+          return of([])
+        })
+      ))
+    ).subscribe()
   }
 
   getState(): Observable<Partial<MachineContext>> {
@@ -63,6 +74,27 @@ export class MachineService {
 
   send(searchTerm: string) {
     this.eventSubject.next(searchTerm)
+  }
+
+  loadMoreCharacters() {
+    if (this.context.next) {
+      this.loadMore.next(this.context.next)
+    }
+  }
+
+  private moreResults(results: Character[], url: string, next?: string) {
+    if (this.context.next !== url) {
+      return
+    }
+    this.context = {
+      ...this.context,
+      results: [
+        ...(this.context.results ? this.context.results : []),
+        ...results
+      ],
+      next,
+    }
+    this.contextSubject.next(this.context);
   }
 
   private update(updates: Partial<MachineContext>) {
