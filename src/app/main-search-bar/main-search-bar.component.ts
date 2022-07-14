@@ -15,6 +15,6 @@ export class MainSearchBarComponent implements OnInit {
 
   onChange(event: Event) {
     const eventTarget = event.target as HTMLInputElement
-    this.machineService.send({type: 'TYPING', term: eventTarget.value})
+    this.machineService.send(eventTarget.value)
   }
 }
