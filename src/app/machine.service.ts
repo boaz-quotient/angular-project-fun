@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, connect, debounceTime, filter, merge, Observable, of, share, switchMap, tap, zip } from 'rxjs';
+import { BehaviorSubject, catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap, tap } from 'rxjs';
 
 export type Character = {
   gender: string,
@@ -22,6 +22,7 @@ export type MachineResults = {
   },
   results: Character[]
 }
+
 export type MachineContext = {
     state: string,
     results: Character[],
@@ -46,9 +47,8 @@ export class MachineService {
       debounceTime(500),
       tap(term => this.update({ state: 'loading', term })),
       switchMap(term => this.httpClient.get<MachineResults>(`${this.apiUrl}?name=${term}`).pipe(
-        tap(res => {
-          this.update({ state: 'success', next: res.info.next, results: res.results, term })
-        }),
+        distinctUntilChanged(),
+        tap(res => this.update({ state: 'success', next: res.info.next, results: res.results, term })),
         catchError((err: Response) => {
           this.update({ state: 'failure', error: err.statusText, term })
           return of([])

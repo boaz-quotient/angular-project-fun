@@ -1,0 +1,21 @@
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 300px;
+  width: 65vw;
+  background: rgb(239, 241, 246) no-repeat;
+  animation: pulse 0.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: 0.5s;
+}
