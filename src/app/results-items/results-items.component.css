@@ -4,6 +4,8 @@
   gap: 55px;
   justify-content: center;
   align-items: center;
+  padding-bottom: 100px;
+  width: 100%;
 }
 
 .failure {
@@ -13,8 +15,9 @@
 }
 
 .footer {
+  position: fixed;
+  bottom: 0;
   width: 100%;
   min-height: 30px;
   background-color: rgb(51 65 85);
-  margin-top: 30px;
 }

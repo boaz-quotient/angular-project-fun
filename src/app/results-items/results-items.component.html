@@ -3,13 +3,25 @@
     <ng-container *ngSwitchCase="'failure'">
       <app-alert class="failure" [title]="'Oh no! something went wrong'" [message]="context.error || ''"></app-alert>
     </ng-container>
-    <ng-container *ngSwitchDefault>
+    <ng-container *ngSwitchCase="'success'">
       <div class="results">
           <ng-container *ngFor="let character of context.results">
-            <app-card [name]="character.name" [status]="character.status" [gender]="character.gender" [species]="character.species" [image]="character.image"></app-card>
+            <app-card (click)="selectCharacter(character.id)" [name]="character.name" [status]="character.status" [gender]="character.gender" [species]="character.species" [image]="character.image"></app-card>
           </ng-container>
       </div>
       <div class="footer"></div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'loading'">
+      <div class="results">
+          <app-skeleton></app-skeleton>
+          <app-skeleton></app-skeleton>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'user-typing'">
+      <div class="results">
+          <app-skeleton></app-skeleton>
+          <app-skeleton></app-skeleton>
+      </div>
     </ng-container>
   </ng-container>
 </ng-container>

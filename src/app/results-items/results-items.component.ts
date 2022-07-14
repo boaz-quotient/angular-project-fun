@@ -5,10 +5,11 @@ import { MachineContext, MachineService } from '../machine.service';
 @Component({
   selector: 'app-results-items',
   templateUrl: './results-items.component.html',
-  styleUrls: ['./results-items.component.css']
+  styleUrls: ['./results-items.component.css'],
 })
 export class ResultsItemsComponent implements OnInit {
 
+  selectedCharacter: number | null = null
   context$: Observable<Partial<MachineContext>> = of({})
   constructor(private machineService: MachineService) { }
 
@@ -16,4 +17,7 @@ export class ResultsItemsComponent implements OnInit {
     this.context$ = this.machineService.getState()
   }
 
+  selectCharacter(id: number) {
+    this.selectedCharacter = id
+  }
 }
