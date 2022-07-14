@@ -14,7 +14,6 @@ export class ResultsItemsComponent implements OnInit {
 
   ngOnInit(): void {
     this.context$ = this.machineService.getState()
-    this.context$.subscribe(v => console.log(v))
   }
 
 }

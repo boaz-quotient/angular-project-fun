@@ -1,8 +1,15 @@
-<h1>Results</h1>
 <ng-container *ngIf="context$ | async as context">
   <ng-container [ngSwitch]="context.state">
-    <ng-container *ngSwitchCase="'success'">SUCCESS</ng-container>
-    <ng-container *ngSwitchCase="'failure'">FAILURE</ng-container>
-    <ng-container *ngSwitchCase="'loading'">LOADING</ng-container>
+    <ng-container *ngSwitchCase="'failure'">
+      <app-alert class="failure" [title]="'Oh no! something went wrong'" [message]="context.error || ''"></app-alert>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div class="results">
+          <ng-container *ngFor="let character of context.results">
+            <app-card [name]="character.name" [status]="character.status" [gender]="character.gender" [species]="character.species" [image]="character.image"></app-card>
+          </ng-container>
+      </div>
+      <div class="footer"></div>
+    </ng-container>
   </ng-container>
 </ng-container>

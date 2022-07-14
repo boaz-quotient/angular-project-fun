@@ -5,12 +5,16 @@ import { HttpClientModule } from '@angular/common/http'
 import { AppComponent } from './app.component';
 import { MainSearchBarComponent } from './main-search-bar/main-search-bar.component';
 import { ResultsItemsComponent } from './results-items/results-items.component';
+import { CardComponent } from './card/card.component';
+import { AlertComponent } from './alert/alert.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainSearchBarComponent,
-    ResultsItemsComponent
+    ResultsItemsComponent,
+    CardComponent,
+    AlertComponent
   ],
   imports: [
     HttpClientModule,
